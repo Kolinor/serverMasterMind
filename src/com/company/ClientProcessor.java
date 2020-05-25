@@ -78,6 +78,7 @@ public class ClientProcessor implements Runnable {
             }
         }
     }
+    // coucou
 
     private void deconnexionLogin() {
         for (int i = 0; i < logins.size(); i++) {
