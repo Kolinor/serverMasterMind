@@ -44,15 +44,15 @@ public class Server {
         this.change = false;
         Mastermind mm = new Mastermind();
         mm.generateNewCode();
-        System.out.println(mm.getCode());
+        System.out.println("code : " + mm.getCode());
         ArrayList<String> pp = new ArrayList<>();
         pp.add("rouge");
         pp.add("rouge");
         pp.add("rouge");
         pp.add("vert");
 
-        System.out.println(pp);
-        System.out.println(mm.codeClient(pp));
+        System.out.println("code envoyé par client : " + pp);
+        System.out.println("code renvoyé au client : " + mm.codeClient(pp));
         System.out.println(mm.nbPresenceCoucleurCode());
 
         Thread t = new Thread(new Runnable() {
