@@ -29,13 +29,13 @@ public class Mastermind {
 
         for (int i = 0; i < 4; i++) {
             res = (int)(Math.random() * (tabSizeCouleur));
-//            code.add(couleur.get(res));
+            code.add(couleur.get(res));
 
         }
-        code.add("jaune");
-        code.add("bleu");
-        code.add("rouge");
-        code.add("vert");
+//        code.add("jaune");
+//        code.add("bleu");
+//        code.add("rouge");
+//        code.add("vert");
     }
 
     public ArrayList<String> getCode() {
@@ -44,22 +44,34 @@ public class Mastermind {
 
     public ArrayList<String> codeClient(ArrayList<String> codeClient) {
         ArrayList<String> codeIndice = new ArrayList<>();
-        HashMap<String, Integer> presenceCouleur = nbPresenceCoucleur();
+        HashMap<String, Integer> presenceCouleurCode = nbPresenceCoucleurCode();
+        HashMap<String, Integer> presenceCouleurCodeClient = nbPresenceCoucleurCodeClient(codeClient);
 
         for (int i = 0; i < codeClient.size(); i++) {
+
+            boolean test = presenceCouleurCodeClient.size() > presenceCouleurCode.size();
             if (codeClient.get(i).equals(code.get(i))) codeIndice.add(indice.get("OK"));
-            else if (code.contains(codeClient.get(i)) && presenceCouleur.get(codeClient.get(i)) > 0) codeIndice.add(indice.get("POK"));
+            else if (code.contains(codeClient.get(i)) && presenceCouleurCode.get(codeClient.get(i)) > 0 && test) codeIndice.add(indice.get("POK"));
             else codeIndice.add(indice.get("NOK"));
-            presenceCouleur.replace(codeClient.get(i), presenceCouleur.get(codeClient.get(i)) - 1);
+            presenceCouleurCode.replace(codeClient.get(i), presenceCouleurCode.get(codeClient.get(i)) - 1);
         }
         return codeIndice;
     }
 
-    public HashMap<String, Integer> nbPresenceCoucleur() {
+    public HashMap<String, Integer> nbPresenceCoucleurCode() {
         HashMap<String, Integer> presenceCouleur = new HashMap<>();
 
         for (String s : couleur) presenceCouleur.put(s, 0);
         for (String s : code) presenceCouleur.replace(s, presenceCouleur.get(s) + 1);
+
+        return presenceCouleur;
+    }
+
+    public HashMap<String, Integer> nbPresenceCoucleurCodeClient(ArrayList<String> codeClient) {
+        HashMap<String, Integer> presenceCouleur = new HashMap<>();
+
+        for (String s : couleur) presenceCouleur.put(s, 0);
+        for (String s : codeClient) presenceCouleur.replace(s, presenceCouleur.get(s) + 1);
 
         return presenceCouleur;
     }

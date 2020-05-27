@@ -53,7 +53,7 @@ public class Server {
 
         System.out.println(pp);
         System.out.println(mm.codeClient(pp));
-        System.out.println(mm.nbPresenceCoucleur());
+        System.out.println(mm.nbPresenceCoucleurCode());
 
         Thread t = new Thread(new Runnable() {
             public void run(){
