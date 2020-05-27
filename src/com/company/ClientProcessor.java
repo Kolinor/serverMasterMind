@@ -5,6 +5,7 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import static com.company.Server.*;
@@ -19,6 +20,7 @@ public class ClientProcessor implements Runnable {
     static public String toMessage;
     static public String toLogin;
     private Mastermind mastermind;
+    private ArrayList<String> retourClient = new ArrayList<>();
 
     public ClientProcessor(Socket pSock, Mastermind mastermind){
         this.mastermind = mastermind;
@@ -38,15 +40,17 @@ public class ClientProcessor implements Runnable {
                 ecritureEcran = new PrintStream(sock.getOutputStream(), false);
                 reader = new BufferedInputStream(sock.getInputStream());
                 InputStream inputStream = sock.getInputStream();
-
                 if(fisrtConnexion) {
+                    sendCouleur();
                     login = read();
                     logins.add(login);
                     fisrtConnexion = false;
                 }
 
+
                 System.out.println(mastermind.getCode());
                 String response = read();
+
                 InetSocketAddress remote = (InetSocketAddress)sock.getRemoteSocketAddress();
 
                 String console = "";
@@ -58,8 +62,10 @@ public class ClientProcessor implements Runnable {
                         difficulty = readDifficulty(response);
                         mastermind.generateNewCode(difficulty);
                         selectDifficulty = false;
+                    } else {
+                        retourClient = mastermind.codeClient(parseCouleur(response));
+                        sendIndiceCouleur(retourClient);
                     }
-
                 }
 //                else {
 //                    send(response);
@@ -138,5 +144,30 @@ public class ClientProcessor implements Runnable {
 
     public void p(String p) {
         System.out.println(p);
+    }
+
+    public void sendCouleur() {
+        ArrayList<String> tabCouleur = mastermind.getCouleur();
+        String couleurs = "!couleur ";
+        for (String s : tabCouleur) couleurs = couleurs + s + " ";
+        p(couleurs);
+        send(couleurs);
+    }
+
+    private ArrayList<String> parseCouleur(String str) {
+        ArrayList<String> couleur = new ArrayList<>();
+        String[] arrOfStr = str.split(" ");
+
+        for (String s : arrOfStr)
+            if (!s.equals("!1")) couleur.add(mastermind.getCouleur().get(Integer.parseInt(s)));
+        return couleur;
+    }
+
+    public void sendIndiceCouleur(ArrayList couleurs) {
+        String str = "";
+        for (int i = 0; i < couleurs.size(); i++) {
+            str = str + mastermind.getCouleur().get(couleurs.indexOf(i)) + " ";
+        }
+        send(str);
     }
 }

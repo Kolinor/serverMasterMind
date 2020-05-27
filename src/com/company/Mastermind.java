@@ -45,6 +45,10 @@ public class Mastermind {
         return code;
     }
 
+    public ArrayList<String> getCouleur() {
+        return couleur;
+    }
+
     public ArrayList<String> codeClient(ArrayList<String> codeClient) {
         ArrayList<String> codeIndice = new ArrayList<>();
         HashMap<String, Integer> presenceCouleurCode = nbPresenceCoucleurCode();
