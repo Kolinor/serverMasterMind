@@ -42,18 +42,18 @@ public class Server {
     public void run() {
         this.isRunning = true;
         this.change = false;
-        Mastermind mm = new Mastermind();
-        mm.generateNewCode();
-        System.out.println("code : " + mm.getCode());
-        ArrayList<String> pp = new ArrayList<>();
-        pp.add("rouge");
-        pp.add("rouge");
-        pp.add("rouge");
-        pp.add("vert");
-
-        System.out.println("code envoyé par client : " + pp);
-        System.out.println("code renvoyé au client : " + mm.codeClient(pp));
-        System.out.println(mm.nbPresenceCoucleurCode());
+        Mastermind mastermind = new Mastermind();
+//        mastermind.generateNewCode(4);
+//        System.out.println("code : " + mm.getCode());
+//        ArrayList<String> pp = new ArrayList<>();
+//        pp.add("jaune");
+//        pp.add("bleu");
+//        pp.add("rouge");
+//        pp.add("vert");
+//
+//        System.out.println("code envoyé par client : " + pp);
+//        System.out.println("code renvoyé au client : " + mm.codeClient(pp));
+//        System.out.println(mm.nbPresenceCoucleurCode());
 
         Thread t = new Thread(new Runnable() {
             public void run(){
@@ -73,7 +73,7 @@ public class Server {
                             Socket client = server.accept();
                             nbConnexionRunning++;
                             System.out.println("Connexion cliente reçue.");
-                            ClientProcessor tempClient = new ClientProcessor(client);
+                            ClientProcessor tempClient = new ClientProcessor(client, mastermind);
                             threads.add(new Thread(tempClient));
                             clients.add(tempClient);
                             tempClient = null;

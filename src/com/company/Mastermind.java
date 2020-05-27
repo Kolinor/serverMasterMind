@@ -8,6 +8,7 @@ public class Mastermind {
     private static ArrayList<String> couleur = new ArrayList<>();
     private static ArrayList<String> code = new ArrayList<>();
     private static HashMap<String, String> indice = new HashMap<>();
+    private static int nbEssai;
 
     Mastermind() {
         couleur.add("rouge");
@@ -20,14 +21,16 @@ public class Mastermind {
         indice.put("OK", "vert");
         indice.put("POK", "orange");
         indice.put("NOK", "rouge");
+
+        nbEssai = 0;
     }
 
-    public void generateNewCode() {
+    public void generateNewCode(int difficulty) {
         int tabSizeCouleur = couleur.size();
         if (tabSizeCouleur != 0) code.clear();
         int res = 0;
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < difficulty; i++) {
             res = (int)(Math.random() * (tabSizeCouleur));
             code.add(couleur.get(res));
 
@@ -48,13 +51,13 @@ public class Mastermind {
         HashMap<String, Integer> presenceCouleurCodeClient = nbPresenceCoucleurCodeClient(codeClient);
 
         for (int i = 0; i < codeClient.size(); i++) {
-
             boolean test = presenceCouleurCodeClient.size() > presenceCouleurCode.size();
             if (codeClient.get(i).equals(code.get(i))) codeIndice.add(indice.get("OK"));
             else if (code.contains(codeClient.get(i)) && presenceCouleurCode.get(codeClient.get(i)) > 0 && test) codeIndice.add(indice.get("POK"));
             else codeIndice.add(indice.get("NOK"));
             presenceCouleurCode.replace(codeClient.get(i), presenceCouleurCode.get(codeClient.get(i)) - 1);
         }
+        this.isVictory(codeIndice);
         return codeIndice;
     }
 
@@ -67,12 +70,34 @@ public class Mastermind {
         return presenceCouleur;
     }
 
-    public HashMap<String, Integer> nbPresenceCoucleurCodeClient(ArrayList<String> codeClient) {
+    private HashMap<String, Integer> nbPresenceCoucleurCodeClient(ArrayList<String> codeClient) {
         HashMap<String, Integer> presenceCouleur = new HashMap<>();
 
         for (String s : couleur) presenceCouleur.put(s, 0);
         for (String s : codeClient) presenceCouleur.replace(s, presenceCouleur.get(s) + 1);
 
         return presenceCouleur;
+    }
+
+    public boolean isVictory(ArrayList<String> code) {
+        nbEssai++;
+        int i = 0;
+        String couleur = "";
+        boolean victory = false;
+
+        do {
+            couleur = code.get(i);
+            i++;
+            if (i == 4 ) victory = true;
+        } while (i < 4 && couleur.equals(indice.get("OK")));
+//        if (victory) {
+//            System.out.println("VICTOIRE");
+//            System.out.println(getNbEssai());
+//        }
+        return victory;
+    }
+
+    public int getNbEssai() {
+        return nbEssai;
     }
 }

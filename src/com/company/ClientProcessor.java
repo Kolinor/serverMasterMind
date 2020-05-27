@@ -14,18 +14,23 @@ public class ClientProcessor implements Runnable {
     private Socket sock;
     private BufferedInputStream reader = null;
     public String login;
+    public int difficulty;
     private PrintStream ecritureEcran;
-    public ClientProcessor(Socket pSock){
-        sock = pSock;
-    }
     static public String toMessage;
     static public String toLogin;
+    private Mastermind mastermind;
+
+    public ClientProcessor(Socket pSock, Mastermind mastermind){
+        this.mastermind = mastermind;
+        sock = pSock;
+    }
 
     //Le traitement lancé dans un thread séparé
         public void run(){
         System.err.println("Traitement du client");
         boolean fisrtConnexion = true;
         boolean closeConnexion = false;
+        boolean selectDifficulty = true;
 
         while(!sock.isClosed()){
 
@@ -37,10 +42,10 @@ public class ClientProcessor implements Runnable {
                 if(fisrtConnexion) {
                     login = read();
                     logins.add(login);
-                    send("Welcome " + login + "!");
                     fisrtConnexion = false;
                 }
 
+                System.out.println(mastermind.getCode());
                 String response = read();
                 InetSocketAddress remote = (InetSocketAddress)sock.getRemoteSocketAddress();
 
@@ -48,17 +53,17 @@ public class ClientProcessor implements Runnable {
                 console = "/" + remote.getAddress().getHostAddress() + " ("+ this.login + ")" +  ">" + response;
                 System.out.println("\n" + console);
 
-                if(response.equals("getUtilisateursOnline")) {
-                    StringBuilder temp = new StringBuilder();
-                    temp.append("Client connecté(s): ");
-                    for (String s : logins) {
-                        temp.append(s).append(" | ");
+                if(response.substring(0, 2).equals("!1")) {
+                    if (selectDifficulty) {
+                        difficulty = readDifficulty(response);
+                        mastermind.generateNewCode(difficulty);
+                        selectDifficulty = false;
                     }
-                    send(temp.toString());
+
                 }
-                else {
-                    send(response);
-                }
+//                else {
+//                    send(response);
+//                }
 
 
                 if(response.equals("quit".toLowerCase())){
@@ -112,7 +117,26 @@ public class ClientProcessor implements Runnable {
         return response;
     }
 
+    private String read(String response) throws IOException{
+        InetSocketAddress remote = (InetSocketAddress)sock.getRemoteSocketAddress();
+        String host = remote.getAddress().getHostAddress();
+
+        Date date = new Date();
+        int stream;
+        Fichier file = new Fichier();
+        file.ecrire(host, response, date, this.login);
+        return response;
+    }
+
+    public int readDifficulty(String response) {
+        return Integer.parseInt(response.substring(3));
+    }
+
     public String getLogin() {
         return this.login;
+    }
+
+    public void p(String p) {
+        System.out.println(p);
     }
 }
