@@ -64,7 +64,7 @@ public class ClientProcessor implements Runnable {
                         selectDifficulty = false;
                     } else {
                         retourClient = mastermind.codeClient(parseCouleur(response));
-                        sendIndiceCouleur(retourClient);
+//                        sendIndiceCouleur(retourClient);
                     }
                 }
 //                else {
