@@ -42,6 +42,19 @@ public class Server {
     public void run() {
         this.isRunning = true;
         this.change = false;
+        Mastermind mm = new Mastermind();
+        mm.generateNewCode();
+        System.out.println(mm.getCode());
+        ArrayList<String> pp = new ArrayList<>();
+        pp.add("rouge");
+        pp.add("rouge");
+        pp.add("rouge");
+        pp.add("vert");
+
+        System.out.println(pp);
+        System.out.println(mm.codeClient(pp));
+        System.out.println(mm.nbPresenceCoucleur());
+
         Thread t = new Thread(new Runnable() {
             public void run(){
                 int saveConnexionRunning = nbConnexionRunning;

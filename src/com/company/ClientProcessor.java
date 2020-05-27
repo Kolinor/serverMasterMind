@@ -69,7 +69,7 @@ public class ClientProcessor implements Runnable {
                     sock.close();
                     break;
                 }
-            }catch(SocketException e){
+            } catch(SocketException e){
                 deconnexionLogin();
                 System.err.println("Connexion interrompu ! ");
                 break;
@@ -78,7 +78,6 @@ public class ClientProcessor implements Runnable {
             }
         }
     }
-    // coucou
 
     private void deconnexionLogin() {
         for (int i = 0; i < logins.size(); i++) {
