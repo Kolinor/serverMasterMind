@@ -33,12 +33,12 @@ public class Mastermind {
         for (int i = 0; i < difficulty; i++) {
             res = (int)(Math.random() * (tabSizeCouleur));
             code.add(couleur.get(res));
-
         }
+
+//        code.add("jaune");
+//        code.add("noir");
 //        code.add("jaune");
 //        code.add("bleu");
-//        code.add("rouge");
-//        code.add("vert");
     }
 
     public ArrayList<String> getCode() {
@@ -56,10 +56,19 @@ public class Mastermind {
         nbEssai++;
 
         for (int i = 0; i < codeClient.size(); i++) {
-            boolean test = presenceCouleurCodeClient.size() > presenceCouleurCode.size();
-            if (codeClient.get(i).equals(code.get(i))) codeIndice.add(indice.get("OK"));
-            else if (code.contains(codeClient.get(i)) && presenceCouleurCode.get(codeClient.get(i)) > 0 && test) codeIndice.add(indice.get("POK"));
-            else codeIndice.add(indice.get("NOK"));
+            codeIndice.add("");
+            if (codeClient.get(i).equals(code.get(i))) {
+                presenceCouleurCode.replace(codeClient.get(i), presenceCouleurCode.get(codeClient.get(i)) - 1);
+            }
+        }
+
+        for (int i = 0; i < codeClient.size(); i++) {
+            if (codeClient.get(i).equals(code.get(i))) codeIndice.set(i, indice.get("OK"));
+            else if (code.contains(codeClient.get(i)) && presenceCouleurCode.get(codeClient.get(i)) > 0) {
+                codeIndice.set(i, indice.get("POK"));
+                System.out.println(presenceCouleurCode);
+            }
+            else codeIndice.set(i, indice.get("NOK"));
             presenceCouleurCode.replace(codeClient.get(i), presenceCouleurCode.get(codeClient.get(i)) - 1);
         }
         return codeIndice;
