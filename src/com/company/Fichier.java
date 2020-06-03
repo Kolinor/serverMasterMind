@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,10 +13,12 @@ import java.util.stream.Stream;
 public class Fichier {
     private File fichier;
     private FileReader reader;
+    private String path;
 
-    public Fichier() throws FileNotFoundException {
+    public Fichier(String path) throws FileNotFoundException {
         fichier = null;
-        reader = new FileReader("C:\\Users\\Niloc\\IdeaProjects\\clientTelnet\\src\\com\\company\\text.txt");
+        this.path = path;
+        reader = new FileReader(this.path);
     }
 
     public String lire() throws IOException {
@@ -35,6 +38,18 @@ public class Fichier {
             // exception handling
         }
 
+    }
+
+    public void writeSave(String saveName, int difficulty, ArrayList<String> code) {
+        try(FileWriter fileWriter = new FileWriter(this.path, true)) {
+            String str = "";
+
+            for (String s : code) str += "|" + s;
+
+            fileWriter.write(saveName + "|" + difficulty + str + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void ls() {

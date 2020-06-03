@@ -56,7 +56,7 @@ public class ClientProcessor implements Runnable {
                 String console = "";
                 console = "/" + remote.getAddress().getHostAddress() + " ("+ this.login + ")" +  ">" + response;
                 System.out.println("\n" + console);
-
+                if (response.length() > 3 && response.substring(0, 4).equals("stop")) clearGame();
                 if(response.substring(0, 2).equals("!1")) {
                     if (selectDifficulty) {
                         difficulty = readDifficulty(response);
@@ -74,6 +74,8 @@ public class ClientProcessor implements Runnable {
                             sendIndiceCouleur(retourClient);
                         }
                     }
+                } else if (response.substring(0, 2).equals("!3")) {
+
                 }
 //                else {
 //                    send(response);
@@ -126,21 +128,21 @@ public class ClientProcessor implements Runnable {
         byte[] b = new byte[4096];
         stream = reader.read(b);
         response = new String(b, 0, stream);
-        Fichier file = new Fichier();
-        file.ecrire(host, response, date, this.login);
+//        Fichier file = new Fichier();
+//        file.ecrire(host, response, date, this.login);
         return response;
     }
 
-    private String read(String response) throws IOException{
-        InetSocketAddress remote = (InetSocketAddress)sock.getRemoteSocketAddress();
-        String host = remote.getAddress().getHostAddress();
-
-        Date date = new Date();
-        int stream;
-        Fichier file = new Fichier();
-        file.ecrire(host, response, date, this.login);
-        return response;
-    }
+//    private String read(String response) throws IOException{
+//        InetSocketAddress remote = (InetSocketAddress)sock.getRemoteSocketAddress();
+//        String host = remote.getAddress().getHostAddress();
+//
+//        Date date = new Date();
+//        int stream;
+//        Fichier file = new Fichier();
+//        file.ecrire(host, response, date, this.login);
+//        return response;
+//    }
 
     public int readDifficulty(String response) {
         return Integer.parseInt(response.substring(3));
@@ -150,15 +152,10 @@ public class ClientProcessor implements Runnable {
         return this.login;
     }
 
-    public void p(String p) {
-        System.out.println(p);
-    }
-
     public void sendCouleur() {
         ArrayList<String> tabCouleur = mastermind.getCouleur();
         String couleurs = "!couleur ";
         for (String s : tabCouleur) couleurs = couleurs + s + " ";
-        p(couleurs);
         send(couleurs);
     }
 

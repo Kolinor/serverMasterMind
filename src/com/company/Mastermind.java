@@ -1,14 +1,15 @@
 package com.company;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 public class Mastermind {
     private static ArrayList<String> couleur = new ArrayList<>();
     private static ArrayList<String> code = new ArrayList<>();
     private static HashMap<String, String> indice = new HashMap<>();
     private static int nbEssai;
+    private static Fichier file;
 
     Mastermind() {
         couleur.add("rouge");
@@ -56,19 +57,18 @@ public class Mastermind {
         nbEssai++;
 
         for (int i = 0; i < codeClient.size(); i++) {
-            codeIndice.add("");
             if (codeClient.get(i).equals(code.get(i))) {
                 presenceCouleurCode.replace(codeClient.get(i), presenceCouleurCode.get(codeClient.get(i)) - 1);
             }
         }
 
         for (int i = 0; i < codeClient.size(); i++) {
-            if (codeClient.get(i).equals(code.get(i))) codeIndice.set(i, indice.get("OK"));
+            if (codeClient.get(i).equals(code.get(i))) codeIndice.add(indice.get("OK"));
             else if (code.contains(codeClient.get(i)) && presenceCouleurCode.get(codeClient.get(i)) > 0) {
-                codeIndice.set(i, indice.get("POK"));
+                codeIndice.add(indice.get("POK"));
                 presenceCouleurCode.replace(codeClient.get(i), presenceCouleurCode.get(codeClient.get(i)) - 1);
             }
-            else codeIndice.set(i, indice.get("NOK"));
+            else codeIndice.add(indice.get("NOK"));
 
         }
         return codeIndice;
@@ -111,5 +111,10 @@ public class Mastermind {
 
     public void resetEssai() {
         nbEssai = 0;
+    }
+
+    public void save(String saveName, int difficulty) throws FileNotFoundException {
+        file = new Fichier("C:\\projetMasterMind\\server\\src\\com\\company\\text.txt");
+        file.writeSave(saveName, difficulty, code);
     }
 }
