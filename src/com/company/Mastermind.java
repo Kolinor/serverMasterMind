@@ -66,10 +66,10 @@ public class Mastermind {
             if (codeClient.get(i).equals(code.get(i))) codeIndice.set(i, indice.get("OK"));
             else if (code.contains(codeClient.get(i)) && presenceCouleurCode.get(codeClient.get(i)) > 0) {
                 codeIndice.set(i, indice.get("POK"));
-                System.out.println(presenceCouleurCode);
+                presenceCouleurCode.replace(codeClient.get(i), presenceCouleurCode.get(codeClient.get(i)) - 1);
             }
             else codeIndice.set(i, indice.get("NOK"));
-            presenceCouleurCode.replace(codeClient.get(i), presenceCouleurCode.get(codeClient.get(i)) - 1);
+
         }
         return codeIndice;
     }
