@@ -21,6 +21,7 @@ public class ClientProcessor implements Runnable {
     static public String toLogin;
     private Mastermind mastermind;
     private ArrayList<String> retourClient = new ArrayList<>();
+    boolean selectDifficulty = true;
 
     public ClientProcessor(Socket pSock, Mastermind mastermind){
         this.mastermind = mastermind;
@@ -28,11 +29,10 @@ public class ClientProcessor implements Runnable {
     }
 
     //Le traitement lancé dans un thread séparé
-        public void run(){
+    public void run(){
         System.err.println("Traitement du client");
         boolean fisrtConnexion = true;
         boolean closeConnexion = false;
-        boolean selectDifficulty = true;
 
         while(!sock.isClosed()){
 
@@ -64,7 +64,15 @@ public class ClientProcessor implements Runnable {
                         selectDifficulty = false;
                     } else {
                         retourClient = mastermind.codeClient(parseCouleur(response));
-//                        sendIndiceCouleur(retourClient);
+                        if (mastermind.isVictory(retourClient) && mastermind.getNbEssai() < 10) {
+                            send("!win " + mastermind.getNbEssai());
+                            clearGame();
+                        } else if (mastermind.getNbEssai() == 10) {
+                            send("!loose " + mastermind.getNbEssai());
+                            clearGame();
+                        } else {
+                            sendIndiceCouleur(retourClient);
+                        }
                     }
                 }
 //                else {
@@ -158,16 +166,24 @@ public class ClientProcessor implements Runnable {
         ArrayList<String> couleur = new ArrayList<>();
         String[] arrOfStr = str.split(" ");
 
-        for (String s : arrOfStr)
-            if (!s.equals("!1")) couleur.add(mastermind.getCouleur().get(Integer.parseInt(s)));
+        for (int i = 1; i <= mastermind.getCode().size(); i++) {
+            couleur.add(mastermind.getCouleur().get(Integer.parseInt(arrOfStr[i])));
+        }
+
         return couleur;
     }
 
     public void sendIndiceCouleur(ArrayList couleurs) {
-        String str = "";
+        String str = "!indice ";
+
         for (int i = 0; i < couleurs.size(); i++) {
-            str = str + mastermind.getCouleur().get(couleurs.indexOf(i)) + " ";
+            str += couleurs.get(i) + " ";
         }
         send(str);
+    }
+
+    private void clearGame() {
+        mastermind.resetEssai();
+        selectDifficulty = true;
     }
 }

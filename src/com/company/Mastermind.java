@@ -53,6 +53,7 @@ public class Mastermind {
         ArrayList<String> codeIndice = new ArrayList<>();
         HashMap<String, Integer> presenceCouleurCode = nbPresenceCoucleurCode();
         HashMap<String, Integer> presenceCouleurCodeClient = nbPresenceCoucleurCodeClient(codeClient);
+        nbEssai++;
 
         for (int i = 0; i < codeClient.size(); i++) {
             boolean test = presenceCouleurCodeClient.size() > presenceCouleurCode.size();
@@ -61,7 +62,6 @@ public class Mastermind {
             else codeIndice.add(indice.get("NOK"));
             presenceCouleurCode.replace(codeClient.get(i), presenceCouleurCode.get(codeClient.get(i)) - 1);
         }
-        this.isVictory(codeIndice);
         return codeIndice;
     }
 
@@ -84,7 +84,6 @@ public class Mastermind {
     }
 
     public boolean isVictory(ArrayList<String> code) {
-        nbEssai++;
         int i = 0;
         String couleur = "";
         boolean victory = false;
@@ -94,14 +93,14 @@ public class Mastermind {
             i++;
             if (i == 4 ) victory = true;
         } while (i < 4 && couleur.equals(indice.get("OK")));
-//        if (victory) {
-//            System.out.println("VICTOIRE");
-//            System.out.println(getNbEssai());
-//        }
         return victory;
     }
 
     public int getNbEssai() {
         return nbEssai;
+    }
+
+    public void resetEssai() {
+        nbEssai = 0;
     }
 }
