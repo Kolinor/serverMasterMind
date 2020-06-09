@@ -63,19 +63,17 @@ public class ClientProcessor implements Runnable {
                         mastermind.generateNewCode(difficulty);
                         selectDifficulty = false;
                     } else {
-                        retourClient = mastermind.codeClient(parseCouleur(response));
-                        if (mastermind.isVictory(retourClient) && mastermind.getNbEssai() < 10) {
-                            send("!win " + mastermind.getNbEssai());
-                            clearGame();
-                        } else if (mastermind.getNbEssai() == 10) {
-                            send("!loose " + mastermind.getNbEssai());
-                            clearGame();
-                        } else {
-                            sendIndiceCouleur(retourClient);
-                        }
+                        game(response);
                     }
                 } else if (response.substring(0, 2).equals("!3")) {
-
+                    if (selectDifficulty) {
+                        int dif = Integer.parseInt(parseResponse(response)[1]);
+                        send("!start " + dif);
+                        mastermind.generateNewCode(dif);
+                        selectDifficulty = false;
+                    } else {
+                        game(response);
+                    }
                 }
 //                else {
 //                    send(response);
@@ -182,5 +180,29 @@ public class ClientProcessor implements Runnable {
     private void clearGame() {
         mastermind.resetEssai();
         selectDifficulty = true;
+    }
+
+    private void game(String response) throws FileNotFoundException {
+        String[] s = parseResponse(response);
+
+        if (s.length >= 3 && s[1].equals("save")) {
+            mastermind.save(s[2], Integer.parseInt(s[3]));
+            return;
+        }
+
+        retourClient = mastermind.codeClient(parseCouleur(response), true);
+        if (mastermind.isVictory(retourClient) && mastermind.getNbEssai() < 10) {
+            send("!win " + mastermind.getNbEssai());
+            clearGame();
+        } else if (mastermind.getNbEssai() == 10) {
+            send("!loose " + mastermind.getNbEssai());
+            clearGame();
+        } else {
+            sendIndiceCouleur(retourClient);
+        }
+    }
+
+    private String[] parseResponse(String response) {
+        return response.split(" ");
     }
 }

@@ -1,0 +1,2 @@
+aaa|2|blanc
+niveau3|3|noir|bleu|noir

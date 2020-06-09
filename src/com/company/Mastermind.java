@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,7 +12,9 @@ public class Mastermind {
     private static int nbEssai;
     private static Fichier file;
 
-    Mastermind() {
+    Mastermind() throws FileNotFoundException {
+        file = new Fichier("C:\\projetMasterMind\\server\\src\\com\\company\\text.txt");
+
         couleur.add("rouge");
         couleur.add("jaune");
         couleur.add("bleu");
@@ -50,11 +53,11 @@ public class Mastermind {
         return couleur;
     }
 
-    public ArrayList<String> codeClient(ArrayList<String> codeClient) {
+    public ArrayList<String> codeClient(ArrayList<String> codeClient, Boolean useCount) {
         ArrayList<String> codeIndice = new ArrayList<>();
         HashMap<String, Integer> presenceCouleurCode = nbPresenceCoucleurCode();
         HashMap<String, Integer> presenceCouleurCodeClient = nbPresenceCoucleurCodeClient(codeClient);
-        nbEssai++;
+        if (useCount) nbEssai++;
 
         for (int i = 0; i < codeClient.size(); i++) {
             if (codeClient.get(i).equals(code.get(i))) {
@@ -93,15 +96,13 @@ public class Mastermind {
     }
 
     public boolean isVictory(ArrayList<String> code) {
-        int i = 0;
-        String couleur = "";
-        boolean victory = false;
+        Boolean victory = true;
 
-        do {
-            couleur = code.get(i);
-            i++;
-            if (i == 4 ) victory = true;
-        } while (i < 4 && couleur.equals(indice.get("OK")));
+        for (String s : code) if (!s.equals(indice.get("OK"))) {
+            victory = false;
+            break;
+        }
+
         return victory;
     }
 
@@ -114,7 +115,11 @@ public class Mastermind {
     }
 
     public void save(String saveName, int difficulty) throws FileNotFoundException {
-        file = new Fichier("C:\\projetMasterMind\\server\\src\\com\\company\\text.txt");
+        System.out.println("test");
         file.writeSave(saveName, difficulty, code);
+    }
+
+    public void getSaveName() throws IOException {
+        file.getSaveName();
     }
 }
