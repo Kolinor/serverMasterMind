@@ -13,19 +13,22 @@ import static com.company.Server.*;
 public class ClientProcessor implements Runnable {
 
     private Socket sock;
-    private BufferedInputStream reader = null;
+    private BufferedInputStream reader;
     public String login;
     public int difficulty;
     private PrintStream ecritureEcran;
     static public String toMessage;
     static public String toLogin;
     private Mastermind mastermind;
-    private ArrayList<String> retourClient = new ArrayList<>();
-    boolean selectDifficulty = true;
+    private ArrayList<String> retourClient;
+    boolean selectDifficulty;
 
     public ClientProcessor(Socket pSock, Mastermind mastermind){
         this.mastermind = mastermind;
         sock = pSock;
+        reader = null;
+        retourClient = new ArrayList<>();
+        selectDifficulty = true;
     }
 
     //Le traitement lancé dans un thread séparé
@@ -37,7 +40,7 @@ public class ClientProcessor implements Runnable {
         while(!sock.isClosed()){
 
             try {
-                ecritureEcran = new PrintStream(sock.getOutputStream(), false);
+                ecritureEcran = new PrintStream(sock.getOutputStream(), true);
                 reader = new BufferedInputStream(sock.getInputStream());
                 InputStream inputStream = sock.getInputStream();
                 if(fisrtConnexion) {
@@ -55,6 +58,8 @@ public class ClientProcessor implements Runnable {
 
                 String console = "";
                 console = "/" + remote.getAddress().getHostAddress() + " ("+ this.login + ")" +  ">" + response;
+
+                System.out.println("aaa: " + selectDifficulty);
                 System.out.println("\n" + console);
                 if (response.length() > 3 && response.substring(0, 4).equals("stop")) clearGame();
                 if(response.substring(0, 2).equals("!1")) {
@@ -71,6 +76,7 @@ public class ClientProcessor implements Runnable {
                         send("!start " + dif);
                         mastermind.generateNewCode(dif);
                         selectDifficulty = false;
+                        mastermind.getSaveName();
                     } else {
                         game(response);
                     }
@@ -189,7 +195,7 @@ public class ClientProcessor implements Runnable {
             mastermind.save(s[2], Integer.parseInt(s[3]));
             return;
         }
-
+        System.out.println("ppppppppp");
         retourClient = mastermind.codeClient(parseCouleur(response), true);
         if (mastermind.isVictory(retourClient) && mastermind.getNbEssai() < 10) {
             send("!win " + mastermind.getNbEssai());

@@ -52,19 +52,6 @@ public class Fichier {
         }
     }
 
-    public /*ArrayList<String>*/void getSaveName() throws IOException {
-        int i;
-        String str = "";
-        while((i=reader.read())!=-1) {
-            str += (char)i;
-        }
-
-        System.out.println(str);
-
-
-
-    }
-
     public void ls() {
         String adr = "C:\\Users\\Niloc\\IdeaProjects\\clientTelnet\\src\\com\\company";
         System.out.println("Repertoire courant : " + adr);

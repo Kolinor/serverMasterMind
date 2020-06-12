@@ -38,11 +38,6 @@ public class Mastermind {
             res = (int)(Math.random() * (tabSizeCouleur));
             code.add(couleur.get(res));
         }
-
-//        code.add("jaune");
-//        code.add("noir");
-//        code.add("jaune");
-//        code.add("bleu");
     }
 
     public ArrayList<String> getCode() {
@@ -114,12 +109,21 @@ public class Mastermind {
         nbEssai = 0;
     }
 
-    public void save(String saveName, int difficulty) throws FileNotFoundException {
+    public void save(String saveName, int difficulty) {
         System.out.println("test");
         file.writeSave(saveName, difficulty, code);
     }
 
     public void getSaveName() throws IOException {
-        file.getSaveName();
+        String str = file.lire();
+        String[] arrStr = str.split("\n");
+        ArrayList<String[]> arrs = new ArrayList<>();
+
+        for (String s : arrStr) {
+            arrs.add(s.split("|"));
+            System.out.println(s);
+        }
+
+        System.out.println(arrs);
     }
 }

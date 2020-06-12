@@ -1,1 +1,4 @@
 aaa|2|blanc
+niveau3|3|noir|bleu|noir
+Test|4|jaune|blanc|noir|vert
+thomas|4|jaune|bleu|blanc|blanc
