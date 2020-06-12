@@ -1,5 +1,6 @@
 package com.company;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -45,7 +46,7 @@ public class Server {
         return val;
     }
 
-    public void run() {
+    public void run() throws FileNotFoundException {
         this.isRunning = true;
         this.change = false;
         Mastermind mastermind = new Mastermind();
