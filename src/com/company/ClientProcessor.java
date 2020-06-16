@@ -61,7 +61,6 @@ public class ClientProcessor implements Runnable {
                 String console = "";
                 console = "/" + remote.getAddress().getHostAddress() + " ("+ this.login + ")" +  ">" + response;
 
-                System.out.println("aaa: " + selectDifficulty);
                 System.out.println("\n" + console);
                 if (response.length() > 3 && response.substring(0, 4).equals("stop")) clearGame();
                 if(response.substring(0, 2).equals("!1")) {
@@ -206,7 +205,6 @@ public class ClientProcessor implements Runnable {
             return;
         }
 
-        System.out.println("ppppppppp");
         retourClient = mastermind.codeClient(parseCouleur(response), true);
         if (mastermind.isVictory(retourClient) && mastermind.getNbEssai() < 10) {
             send("!win " + mastermind.getNbEssai());
