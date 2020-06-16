@@ -22,6 +22,7 @@ public class ClientProcessor implements Runnable {
     private Mastermind mastermind;
     private ArrayList<String> retourClient;
     boolean selectDifficulty;
+    ArrayList<String[]> arrSave;
 
     public ClientProcessor(Socket pSock, Mastermind mastermind){
         this.mastermind = mastermind;
@@ -29,6 +30,7 @@ public class ClientProcessor implements Runnable {
         reader = null;
         retourClient = new ArrayList<>();
         selectDifficulty = true;
+        arrSave = new ArrayList<>();
     }
 
     //Le traitement lancé dans un thread séparé
@@ -71,14 +73,22 @@ public class ClientProcessor implements Runnable {
                         game(response);
                     }
                 } else if (response.substring(0, 2).equals("!3")) {
-                    if (selectDifficulty) {
-                        int dif = Integer.parseInt(parseResponse(response)[1]);
-                        send("!start " + dif);
-                        mastermind.generateNewCode(dif);
-                        selectDifficulty = false;
-                        mastermind.getSaveName();
+                    if (response.length() >= 7 && response.substring(3, 7).equals("load")) {
+                        arrSave = mastermind.getSaves();
+                        StringBuilder saveNames = new StringBuilder();
+
+                        for (String[] strings : arrSave) saveNames.append(strings[0]).append("\n");
+                        send("!saveName " + saveNames);
+
                     } else {
-                        game(response);
+                        if (selectDifficulty) {
+                            int dif = Integer.parseInt(parseResponse(response)[1]);
+                            send("!start " + dif);
+                            mastermind.generateNewCode(dif);
+                            selectDifficulty = false;
+                        } else {
+                            game(response);
+                        }
                     }
                 }
 //                else {
@@ -195,6 +205,7 @@ public class ClientProcessor implements Runnable {
             mastermind.save(s[2], Integer.parseInt(s[3]));
             return;
         }
+
         System.out.println("ppppppppp");
         retourClient = mastermind.codeClient(parseCouleur(response), true);
         if (mastermind.isVictory(retourClient) && mastermind.getNbEssai() < 10) {

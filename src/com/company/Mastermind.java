@@ -114,16 +114,14 @@ public class Mastermind {
         file.writeSave(saveName, difficulty, code);
     }
 
-    public void getSaveName() throws IOException {
+    public ArrayList<String[]> getSaves() throws IOException {
         String str = file.lire();
         String[] arrStr = str.split("\n");
         ArrayList<String[]> arrs = new ArrayList<>();
 
         for (String s : arrStr) {
-            arrs.add(s.split("|"));
-            System.out.println(s);
+            arrs.add(s.split("[|]"));
         }
-
-        System.out.println(arrs);
+        return arrs;
     }
 }
