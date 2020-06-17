@@ -115,16 +115,10 @@ public class ClientProcessor implements Runnable {
 
     private void deconnexionLogin() {
         for (int i = 0; i < logins.size(); i++) {
-            if(logins.get(i).equals(login))
+            if (logins.get(i).equals(login))
                 logins.remove(i);
         }
     }
-
-    /*private void speakTo(String login, String message) {
-        if(login.equals(this.login)) {
-            send(login + "> " +message);
-        }
-    }*/
 
     private void send(String message) {
         ecritureEcran.println(message);
